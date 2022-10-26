@@ -1,6 +1,4 @@
 import 'package:weather/weather.dart';
-
-import '../services/weather_service.dart';
 import 'locations.dart';
 
 //Data to use inside the App

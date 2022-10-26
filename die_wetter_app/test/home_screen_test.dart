@@ -1,25 +1,18 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:die_wetter_app/models/locations.dart';
 import 'package:die_wetter_app/models/weather_data.dart';
-import 'package:die_wetter_app/pages/add_screen.dart';
 import 'package:die_wetter_app/pages/home_screen.dart';
 import 'package:die_wetter_app/services/database_helper.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 import 'package:weather/weather.dart';
-import 'package:state_notifier/state_notifier.dart';
-
 import 'package:http/http.dart' as http;
-
 import 'home_screen_test.mocks.dart';
 
 @GenerateMocks([DBHandler, WeatherFactory, WeatherService, http.Client])
@@ -36,7 +29,7 @@ void main() {
 
   when(fakeDBHandler.getAllLocations()).thenAnswer(
     (value) async {
-      print('Fake DB wurde ausgefürt');
+      //print('Fake DB wurde ausgefürt');
       return [Location(id: 'DAFDSFSF', name: 'Stuttgart')];
     },
   );
@@ -45,7 +38,7 @@ void main() {
       .thenAnswer((value) async {
     WeatherService service = WeatherService();
 
-    print('fake WeatherService wurde ausgefürt');
+    //print('fake WeatherService wurde ausgefürt');
 
     Map<String, dynamic> jsonBody = json.decode(fakeResponse5Days);
     List<MyWeather> forecast = service.parseForecast(jsonBody);
@@ -57,7 +50,7 @@ void main() {
       .thenAnswer((value) async {
     Map<String, dynamic> jsonBody = json.decode(fakeResponseCurrentWeather);
 
-    print('Fake WeatherFactory wurde ausgefürt');
+    //print('Fake WeatherFactory wurde ausgefürt');
 
     return Weather(jsonBody);
   });

@@ -73,9 +73,8 @@ class DayWeatherWidget extends ConsumerWidget {
                 ),
                 SizedBox(
                   width: 80,
-                  child: weatherController.getWeatherIcon(
-                    'http://openweathermap.org/img/wn/${data.weatherIcon!}@2x.png',
-                  ),
+                  child: weatherController
+                      .getWeatherIcon(data.weatherIcon ?? 'noimage'),
                 ),
               ],
             ),

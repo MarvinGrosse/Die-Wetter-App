@@ -16,54 +16,94 @@ final weatherProvider = StateNotifierProvider<WeatherProviderNotifier,
 final weatherServiceProvider = Provider((ref) => WeatherService());
 final weatherFactoryProvider = Provider((ref) => WeatherFactory(_apiKey));
 
+final StackTrace noLocationsError =
+    StackTrace.fromString('There are no locations. \nTry adding a location');
+
 class WeatherProviderNotifier
     extends StateNotifier<AsyncValue<List<WeatherData>>> {
   WeatherProviderNotifier(this.ref) : super(const AsyncLoading()) {
-    init();
+    getWeather();
   }
 
   Ref ref;
-  //WeatherFactory wf = WeatherFactory(_apiKey);
-  //WeatherService ws = WeatherService();
 
-  void init() async {
+  List<Location> locationNames = [];
+  List<WeatherData> weatherList = [];
+
+  void getWeather() async {
     state = const AsyncLoading();
-    List<WeatherData> data = await getWeatherByName(
-        await ref.read(databaseProvider).getAllLocations());
-    state = AsyncData(data);
-  }
+    locationNames = [];
+    weatherList = [];
 
-  Future<List<WeatherData>> getWeatherByName(List<Location> nameList) async {
-    List<WeatherData> weatherList = [];
-
-    for (var element in nameList) {
-      try {
-        Weather w = await ref
-            .read(weatherFactoryProvider)
-            .currentWeatherByCityName(element.name);
-        List<MyWeather> f = await ref
-            .read(weatherServiceProvider)
-            .getDailyForecastFiveDays(element.name);
-        List<HourlyWeather> hf =
-            []; //await getHourForecast(element.name); Funktioniert nicht weil aki key anscheinend nicht valide für diesen call
-        weatherList.add(WeatherData(w, f, hf, element));
-      } catch (e) {
-        log(e.toString());
-      }
+    // laden der gespeicherten Locations aus der lokeln Datenbank.
+    try {
+      locationNames = await ref.read(databaseProvider).getAllLocations();
+    } catch (e) {
+      state = AsyncValue.error(
+          Error,
+          StackTrace.fromString(
+              'stored locations could not be loaded. try again'));
     }
-    return weatherList;
+
+    //checken ob locations leer sind, falls ja state setzten.
+    if (locationNames.isEmpty) {
+      state = AsyncError(Error, noLocationsError);
+    } else {
+      // loopen über die Locations der Datenbank und fetchen des Wetters der Api.
+      for (var element in locationNames) {
+        try {
+          Weather w = await ref
+              .read(weatherFactoryProvider)
+              .currentWeatherByCityName(element.name);
+          List<MyWeather> f = await ref
+              .read(weatherServiceProvider)
+              .getDailyForecastFiveDays(element.name);
+          List<HourlyWeather> hf =
+              []; //await getHourForecast(element.name); Funktioniert nicht weil aki key anscheinend nicht valide für diesen call
+          weatherList.add(WeatherData(w, f, hf, element));
+        } catch (e) {
+          state = AsyncError(Error(), StackTrace.fromString(e.toString()));
+          log(e.toString());
+        }
+      }
+      state = AsyncData(weatherList);
+    }
   }
 
   // returns the Icon for the Weather API
-  getWeatherIcon(String url) {
+  getWeatherIcon(String data) {
+    String url = 'http://openweathermap.org/img/wn/$data@2x.png';
     return Image.network(
       url,
       fit: BoxFit.cover,
       errorBuilder:
           (BuildContext context, Object exception, StackTrace? stackTrace) {
-        return const Text('😢');
+        return const Text('no Image');
       },
     );
+  }
+
+  // Function zum pfüfen ob Stadt existiert in der WeatherApi.
+  Future<bool> checkForLocation() async {
+    return false;
+  }
+
+  void deleteLocation(WeatherData weatherData) async {
+    try {
+      await ref.read(databaseProvider).deleteLocation(weatherData.location.id);
+      locationNames.remove(weatherData.location);
+      weatherList.remove(weatherData);
+      if (weatherList.isEmpty) {
+        state = AsyncError(Error, noLocationsError);
+      } else {
+        state = AsyncData(weatherList);
+      }
+    } catch (e) {
+      state = AsyncError(
+          Error,
+          StackTrace.fromString(
+              'could not delete location. \nPull to refrech and try again'));
+    }
   }
 }
 

@@ -30,10 +30,7 @@ class ForecastWidget extends ConsumerWidget {
                   .toUpperCase(),
           style: const TextStyle(fontSize: 10),
         ),
-        SizedBox(
-            height: 50,
-            child: weatherController.getWeatherIcon(
-                'http://openweathermap.org/img/wn/${weather.weatherIcon!}@2x.png')),
+        SizedBox(height: 50, child: weatherController.getWeatherIcon('10d')),
         Text(
           lowToHighTemp,
           style: const TextStyle(fontSize: 10),

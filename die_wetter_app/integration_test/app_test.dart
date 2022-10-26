@@ -1,4 +1,3 @@
-import 'package:die_wetter_app/services/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -8,14 +7,12 @@ import 'package:die_wetter_app/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  //DBHandler db = DBHandler();
-  //db.resetDB();
-
   group('end-to-end test', () {
     testWidgets(
         'Change screens, add Location, change back, go Details, delete Location, go back and Check',
         (tester) async {
       app.main();
+
       await tester.pumpAndSettle();
 
       final firstTitle = find.text('Die Wetter App');

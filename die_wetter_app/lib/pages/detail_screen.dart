@@ -3,8 +3,6 @@ import 'package:die_wetter_app/services/database_helper.dart';
 import 'package:die_wetter_app/widgets/forecast_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../models/locations.dart';
 import '../widgets/day_weather_widget.dart';
 
 class DetailScreen extends ConsumerWidget {

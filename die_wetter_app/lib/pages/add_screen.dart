@@ -1,13 +1,8 @@
-import 'dart:developer';
-
 import 'package:die_wetter_app/models/locations.dart';
-import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:weather/weather.dart';
-
 import '../services/database_helper.dart';
 
 class AddScreen extends ConsumerStatefulWidget {
@@ -96,11 +91,17 @@ class _AddScreenState extends ConsumerState<AddScreen> {
     if (locationExists) {
       await ref.read(databaseProvider).insertLocation(
           Location(id: const Uuid().v4().toString(), name: location));
-      const snackBar = SnackBar(
-        content: Text('Location added'),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      Navigator.of(context).pop(true);
+      if (mounted) {
+        const snackBar = SnackBar(
+          content: Text('Location added'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Navigator.of(context).pop(true);
+      } else {
+        const AlertDialog(
+          title: Text('Error: try again'),
+        );
+      }
     }
   }
 }
