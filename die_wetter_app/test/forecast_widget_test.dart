@@ -4,7 +4,8 @@ import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:die_wetter_app/widgets/forecast_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+//import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 const String fakeResponse5Days =

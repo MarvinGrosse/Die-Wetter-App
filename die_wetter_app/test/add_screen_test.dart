@@ -1,7 +1,8 @@
 import 'package:die_wetter_app/pages/add_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+//import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
   testWidgets('Add Location on AddScreen', (tester) async {

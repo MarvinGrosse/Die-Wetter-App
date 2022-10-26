@@ -1,6 +1,7 @@
 import 'package:die_wetter_app/models/locations.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+//import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:weather/weather.dart';
 import '../services/database_helper.dart';
