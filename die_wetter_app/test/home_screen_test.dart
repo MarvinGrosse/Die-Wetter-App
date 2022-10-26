@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:die_wetter_app/models/locations.dart';
 import 'package:die_wetter_app/models/weather_data.dart';
-import 'package:die_wetter_app/pages/home_screen.dart';
+import 'package:die_wetter_app/pages/home_screen/home_screen.dart';
 import 'package:die_wetter_app/services/database_helper.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter/material.dart';

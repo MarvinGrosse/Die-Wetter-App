@@ -46,6 +46,7 @@ dependencies:
   path:
   http:
   flutter_slidable:
+  flutter_typeahead: ^4.1.1
   
 
 dev_dependencies:

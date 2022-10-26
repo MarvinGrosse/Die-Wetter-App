@@ -1,8 +1,10 @@
 import 'package:die_wetter_app/pages/add_screen.dart';
 import 'package:die_wetter_app/pages/detail_screen.dart';
+import 'package:die_wetter_app/pages/home_screen/home_provider.dart';
 import 'package:die_wetter_app/services/database_helper.dart';
 import 'package:die_wetter_app/services/text_validator_service.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
+import 'package:die_wetter_app/widgets/app_bar_search.dart';
 import 'package:die_wetter_app/widgets/forecast_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -31,98 +33,38 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomescreenState extends ConsumerState<HomeScreen> {
-  Icon _searchIcon = const Icon(Icons.search);
-  Widget _appBarTitle = const Text('Die Wetter App');
-  var _text = '';
-
   final _searchTextController = TextEditingController();
 
-  String? get _errorText {
-    // at any time, we can get the text from _controller.value.text
-    final text = _searchTextController.value.text;
-    // Note: you can do your own custom validation here
-    // Move this logic this outside the widget for more testable code
-    if (text.isEmpty) {
-      return 'Can\'t be empty';
-    }
-    if (text.length < 4) {
-      return 'Too short';
-    }
-    // return null if the text is valid
-    return null;
+  getWeatherIcon(String data) {
+    String url = 'http://openweathermap.org/img/wn/$data@2x.png';
+    return Image.network(
+      url,
+      fit: BoxFit.cover,
+      errorBuilder:
+          (BuildContext context, Object exception, StackTrace? stackTrace) {
+        return const Text('no Image');
+      },
+    );
   }
-
-/**
-  void setStateForTextField(text ){
-    setState(() {
-      _text = text;
-    });
-  }
-   */
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
     _searchTextController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    //ref.read(databaseProvider).resetDB();
-    final weatherDataProvider = ref.watch(weatherProvider);
-    final weatherController = ref.read(weatherProvider.notifier);
-    final textValidatorController = ref.read(textValidatorProvider.notifier);
-    final textValidProvider = ref.watch(textValidatorProvider);
+    final state = ref.watch(homeProvider);
+    final homeNotifier = ref.read(homeProvider.notifier);
 
     return MaterialApp(
       theme: ThemeData(scaffoldBackgroundColor: Colors.lightBlue[50]),
       home: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 95,
-            title: _appBarTitle,
-            centerTitle: true,
-            actions: [
-              Builder(
-                  builder: (context) => IconButton(
-                        onPressed: () => setState(() {
-                          if (_searchIcon.icon == Icons.search) {
-                            _searchIcon = const Icon(
-                              Icons.close,
-                            );
-                            _appBarTitle = TextField(
-                              onChanged: (text) => setState(() {
-                                print('TEST');
-                                _text = text;
-                              }),
-                              controller: _searchTextController,
-                              decoration: InputDecoration(
-                                  errorText: _errorText,
-                                  prefixIcon: const Icon(
-                                    Icons.search,
-                                  ),
-                                  hintText: 'Search...',
-                                  filled: true,
-                                  fillColor:
-                                      const Color.fromARGB(116, 255, 255, 255),
-                                  border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(15)))),
-                            );
-                          } else {
-                            _searchIcon = const Icon(Icons.search);
-                            _appBarTitle = const Text('Search Example');
-                          }
-                        }),
-                        icon: _searchIcon,
-                        //iconSize: 40,
-                      ))
-            ],
-          ),
+          appBar: AppBarSearch(),
           body: RefreshIndicator(
-            onRefresh: () => Future(() => weatherController.getWeather()),
-            child: weatherDataProvider.when(
+            onRefresh: () => Future(() => homeNotifier.getWeather()),
+            child: state.when(
                 data: (weather) {
                   return Center(
                     child: ListView.separated(
@@ -136,13 +78,12 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
                               endActionPane: ActionPane(
                                   motion: const DrawerMotion(),
                                   dismissible: DismissiblePane(onDismissed: () {
-                                    weatherController
-                                        .deleteLocation(weather[index]);
+                                    homeNotifier.deleteLocation(weather[index]);
                                   }),
                                   children: [
                                     SlidableAction(
                                       onPressed: (context) {
-                                        weatherController
+                                        homeNotifier
                                             .deleteLocation(weather[index]);
                                       },
                                       backgroundColor: const Color(0xFFFE4A49),
@@ -172,7 +113,7 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
                                       );
 
                                       if (shouldRefresh ?? false) {
-                                        weatherController.getWeather();
+                                        homeNotifier.getWeather();
                                       }
                                     },
                                     child: Padding(
@@ -194,12 +135,11 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
                                                   .weatherMain!),
                                               leading: SizedBox(
                                                 width: 80,
-                                                child: weatherController
-                                                    .getWeatherIcon(
-                                                        weather[index]
-                                                                .weather
-                                                                .weatherIcon ??
-                                                            'noimage'),
+                                                child: getWeatherIcon(
+                                                    weather[index]
+                                                            .weather
+                                                            .weatherIcon ??
+                                                        'noimage'),
                                               ),
                                               trailing: Text(
                                                 '${weather[index].weather.temperature!.celsius!.toStringAsFixed(0)}°c',
@@ -232,9 +172,9 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
                             textAlign: TextAlign.center,
                           ),
                           ElevatedButton.icon(
-                              onPressed: () => weatherController.getWeather(),
+                              onPressed: () => homeNotifier.getWeather(),
                               icon: const Icon(Icons.refresh_rounded),
-                              label: const Text('Refrech'))
+                              label: const Text('Refresh'))
                         ],
                       ),
                     ),
