@@ -2,7 +2,7 @@ import 'package:die_wetter_app/pages/add_screen.dart';
 import 'package:die_wetter_app/pages/detail_screen.dart';
 import 'package:die_wetter_app/pages/home_screen/home_provider.dart';
 import 'package:die_wetter_app/services/database_helper.dart';
-import 'package:die_wetter_app/services/text_validator_service.dart';
+//import 'package:die_wetter_app/services/text_validator_service.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:die_wetter_app/widgets/app_bar_search.dart';
 import 'package:die_wetter_app/widgets/forecast_widget.dart';
@@ -124,25 +124,25 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
                                           children: [
                                             ListTile(
                                               title: Text(
-                                                weather[index]
-                                                    .weather
-                                                    .areaName!,
+                                                weather[index].weather.name!,
                                                 key: const Key(
                                                     'LocationTitleHomeScreen'),
                                               ),
                                               subtitle: Text(weather[index]
                                                   .weather
-                                                  .weatherMain!),
+                                                  .weather![0]
+                                                  .main!),
                                               leading: SizedBox(
                                                 width: 80,
                                                 child: getWeatherIcon(
                                                     weather[index]
                                                             .weather
-                                                            .weatherIcon ??
+                                                            .weather![0]
+                                                            .icon ??
                                                         'noimage'),
                                               ),
                                               trailing: Text(
-                                                '${weather[index].weather.temperature!.celsius!.toStringAsFixed(0)}°c',
+                                                '${weather[index].weather.main!.temp!}°c', //.celsius!.toStringAsFixed(0)
                                                 style: const TextStyle(
                                                     fontSize: 30),
                                               ),
@@ -283,26 +283,26 @@ class xHomeScreen extends ConsumerWidget {
                                           children: [
                                             ListTile(
                                               title: Text(
-                                                weather[index]
-                                                    .weather
-                                                    .areaName!,
+                                                weather[index].weather.name!,
                                                 key: const Key(
                                                     'LocationTitleHomeScreen'),
                                               ),
                                               subtitle: Text(weather[index]
                                                   .weather
-                                                  .weatherMain!),
+                                                  .weather![0]
+                                                  .main!),
                                               leading: SizedBox(
                                                 width: 80,
                                                 child: weatherController
                                                     .getWeatherIcon(
                                                         weather[index]
                                                                 .weather
-                                                                .weatherIcon ??
+                                                                .weather![0]
+                                                                .icon ??
                                                             'noimage'),
                                               ),
                                               trailing: Text(
-                                                '${weather[index].weather.temperature!.celsius!.toStringAsFixed(0)}°c',
+                                                '${weather[index].weather.main!.temp!.celsius!.toStringAsFixed(0)}°c', //.celsius!.toStringAsFixed(0)
                                                 style: const TextStyle(
                                                     fontSize: 30),
                                               ),

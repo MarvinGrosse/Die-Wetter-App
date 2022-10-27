@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:die_wetter_app/models/today_weather.dart';
 import 'package:flutter/material.dart';
 //import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,9 +54,9 @@ class WeatherProviderNotifier
       // loopen über die Locations der Datenbank und fetchen des Wetters der Api.
       for (var element in locationNames) {
         try {
-          Weather w = await ref
-              .read(weatherFactoryProvider)
-              .currentWeatherByCityName(element.name);
+          TodayWeather w = await ref
+              .read(weatherServiceProvider)
+              .getTodaysWeather(element.name);
           List<MyWeather> f = await ref
               .read(weatherServiceProvider)
               .getDailyForecastFiveDays(element.name);
@@ -84,11 +85,6 @@ class WeatherProviderNotifier
     );
   }
 
-  // Function zum pfüfen ob Stadt existiert in der WeatherApi.
-  Future<bool> checkForLocation() async {
-    return false;
-  }
-
   void deleteLocation(WeatherData weatherData) async {
     try {
       await ref.read(databaseProvider).deleteLocation(weatherData.location.id);
@@ -109,6 +105,23 @@ class WeatherProviderNotifier
 }
 
 class WeatherService {
+  Future<TodayWeather> getTodaysWeather(String cityName) async {
+    String url =
+        "https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$_apiKey&lang=en";
+
+    /// Send HTTP get response with the url
+    http.Response response = await _httpClient.get(Uri.parse(url));
+
+    /// Perform error checking on response:
+    if (response.statusCode == STATUS_OK) {
+      //log(response.body.toString());
+      Map<String, dynamic> jsonBody = json.decode(response.body);
+      return TodayWeather.fromJson(jsonBody);
+    } else {
+      throw OpenWeatherAPIException("API Error: ${response.body}");
+    }
+  }
+
   static const int STATUS_OK = 200;
   static const String FIVE_DAY_FORECAST = 'daily';
   static const String HOURLY_FORECAST = 'hourly';

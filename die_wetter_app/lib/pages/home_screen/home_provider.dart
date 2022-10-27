@@ -1,8 +1,11 @@
+import 'package:die_wetter_app/models/today_weather.dart';
 import 'package:die_wetter_app/services/database_helper.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import 'package:weather/weather.dart';
 
+import '../../models/city.dart';
 import '../../models/locations.dart';
 import '../../models/weather_data.dart';
 
@@ -45,9 +48,10 @@ class HomeNotifier extends StateNotifier<AsyncValue<List<WeatherData>>> {
       // loopen über die Locations der Datenbank und fetchen des Wetters der Api.
       for (var element in locationNames) {
         try {
-          Weather w = await ref
-              .read(weatherFactoryProvider)
-              .currentWeatherByCityName(element.name);
+          TodayWeather w = await ref
+              .read(weatherServiceProvider)
+              .getTodaysWeather(element.name);
+          print('TODAYS WEATGEHR: $w');
           List<MyWeather> f = await ref
               .read(weatherServiceProvider)
               .getDailyForecastFiveDays(element.name);
@@ -61,13 +65,6 @@ class HomeNotifier extends StateNotifier<AsyncValue<List<WeatherData>>> {
       }
       state = AsyncData(weatherList);
     }
-  }
-
-  // returns the Icon for the Weather API
-
-  // Function zum pfüfen ob Stadt existiert in der WeatherApi.
-  Future<bool> checkForLocation() async {
-    return false;
   }
 
   void deleteLocation(WeatherData weatherData) async {
@@ -85,6 +82,22 @@ class HomeNotifier extends StateNotifier<AsyncValue<List<WeatherData>>> {
           Error,
           StackTrace.fromString(
               'could not delete location. \nPull to refrech and try again'));
+    }
+  }
+
+  void addLocation(City city) async {
+    try {
+      await ref
+          .read(weatherFactoryProvider)
+          .currentWeatherByCityName(city.name!);
+      await ref.read(databaseProvider).insertLocation(
+          Location(id: const Uuid().v4().toString(), name: city.name!));
+      getWeather();
+    } catch (e) {
+      state = AsyncError(
+          Error,
+          StackTrace.fromString(
+              'could not add location. \nLocation does not exist'));
     }
   }
 }

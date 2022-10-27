@@ -1,9 +1,11 @@
-import 'package:weather/weather.dart';
+import 'package:die_wetter_app/models/today_weather.dart';
+//import 'package:weather/weather.dart';
 import 'locations.dart';
+//import 'today_weather.dart' as Temperature;
 
 //Data to use inside the App
 class WeatherData {
-  final Weather weather;
+  final TodayWeather weather;
   final List<MyWeather> forecast;
   final List<HourlyWeather> hourForecast;
   final Location location;

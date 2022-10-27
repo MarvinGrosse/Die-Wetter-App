@@ -1,3 +1,4 @@
+import 'package:die_wetter_app/models/today_weather.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +9,7 @@ import 'package:weather/weather.dart';
 class DayWeatherWidget extends ConsumerWidget {
   const DayWeatherWidget({super.key, required this.data});
 
-  final Weather data;
+  final TodayWeather data;
 
   String getDirection(double value) {
     if (value > 337.5 && value <= 360 || value >= 0 && value <= 22.5) {
@@ -59,7 +60,8 @@ class DayWeatherWidget extends ConsumerWidget {
                     Text(
                       data.date == null
                           ? '-'
-                          : DateFormat('EEEE').format(data.date!),
+                          : DateFormat('EEEE').format(
+                              DateTime.fromMillisecondsSinceEpoch(data.date!)),
                     ),
                     Text(
                       DateFormat('kk:mm').format(DateTime.now()),
@@ -69,13 +71,13 @@ class DayWeatherWidget extends ConsumerWidget {
                   ],
                 ),
                 Text(
-                  '${data.temperature!.celsius!.toStringAsFixed(0)}°c',
+                  '${data.main!.temp!}°c', //.celsius!.toStringAsFixed(0)
                   style: const TextStyle(fontSize: 50),
                 ),
                 SizedBox(
                   width: 80,
                   child: weatherController
-                      .getWeatherIcon(data.weatherIcon ?? 'noimage'),
+                      .getWeatherIcon(data.weather![0].icon ?? 'noimage'),
                 ),
               ],
             ),
@@ -88,19 +90,19 @@ class DayWeatherWidget extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          'Wind Direct: ${getDirection(data.windDegree ?? 500)}'),
+                          'Wind Direct: ${getDirection(data.wind?.deg!.toDouble() ?? 500)}'),
                       Text(
-                          'Wind Speed: ${(data.windSpeed ?? 0 * (60 * 60) / 1000)}km/h')
+                          'Wind Speed: ${(data.wind?.speed!.toDouble() ?? 0 * (60 * 60) / 1000)}km/h')
                     ],
                   ),
                   Column(
                     children: [
-                      Text(data.weatherDescription ?? '-'),
+                      Text(data.weather![0].description ?? '-'),
                       Text(
-                        'Max: ${data.tempMax?.celsius?.toStringAsFixed(0) ?? '-'}°c',
+                        'Max: ${data.main?.tempMax! ?? '-'}°c', //data.main?.tempMax?.celsius?.toStringAsFixed(0)
                       ),
                       Text(
-                        'Min: ${data.tempMin?.celsius?.toStringAsFixed(0) ?? '-'}°c',
+                        'Min: ${data.main?.tempMin! ?? '-'}°c', //data.main?.tempMin?.celsius?.toStringAsFixed(0)
                       )
                     ],
                   )

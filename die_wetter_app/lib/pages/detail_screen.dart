@@ -18,7 +18,7 @@ class DetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(data.weather.areaName ?? "No name..."),
+        title: Text(data.weather.name ?? "No name..."),
         centerTitle: true,
       ),
       body: Padding(

@@ -1,12 +1,16 @@
+import 'package:die_wetter_app/pages/home_screen/home_provider.dart';
+import 'package:die_wetter_app/services/cities_service.dart';
+import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class AppBarSearch extends StatefulWidget implements PreferredSizeWidget {
-  const AppBarSearch({super.key, this.onChanged});
-
-  final TextChangeCallback onChanged;
+  const AppBarSearch({
+    super.key,
+  });
 
   @override
   State<AppBarSearch> createState() => _AppBarSearchState();
@@ -16,29 +20,17 @@ class AppBarSearch extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _AppBarSearchState extends State<AppBarSearch> {
-  bool isSearch = false;
-  var _text = '';
-  final _searchTextController = TextEditingController();
-
-  String? get _errorText {
-    // at any time, we can get the text from _controller.value.text
-    final text = _searchTextController.value.text;
-    // Note: you can do your own custom validation here
-    // Move this logic this outside the widget for more testable code
-    if (text.isEmpty) {
-      return 'Can\'t be empty';
-    }
-    if (text.length < 4) {
-      return 'Too short';
-    }
-    // return null if the text is valid
-    return null;
+  @override
+  void initState() {
+    isSearch = false;
+    super.initState();
   }
+
+  bool isSearch = false;
+  final _searchTextController = TextEditingController();
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
     _searchTextController.dispose();
     super.dispose();
   }
@@ -48,13 +40,21 @@ class _AppBarSearchState extends State<AppBarSearch> {
     return AppBar(
       toolbarHeight: 95,
       title: isSearch
-          ? AppBarTextField(textController: _searchTextController)
+          ? AppBarTextField(
+              textController: _searchTextController,
+              callback: () {
+                setState(() {
+                  isSearch = false;
+                });
+              },
+            )
           : const AppBarTitle(),
       centerTitle: true,
       actions: [
         IconButton(
           onPressed: () => setState(() {
             isSearch = !isSearch;
+            _searchTextController.clear();
           }),
           icon: Icon(isSearch ? Icons.close : Icons.search),
         )
@@ -72,62 +72,49 @@ class AppBarTitle extends StatelessWidget {
   }
 }
 
-typedef TextChangeCallback = void Function(dynamic)?;
+typedef ResetTextStateCallback = Function();
 
-class AppBarTextField extends StatelessWidget {
+class AppBarTextField extends ConsumerWidget {
   const AppBarTextField(
-      {super.key, required this.textController, this.error, this.onChanged});
+      {super.key, required this.textController, required this.callback});
 
   final TextEditingController textController;
 
-  final String? error;
-
-  final TextChangeCallback onChanged;
+  final ResetTextStateCallback callback;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final suggetionsServiceProvider = ref.read(citiesProvider);
+
     return TypeAheadField(
       textFieldConfiguration: TextFieldConfiguration(
-        onChanged: onChanged,
         controller: textController,
-        decoration: InputDecoration(
-            errorText: error,
-            prefixIcon: const Icon(
-              Icons.search,
-            ),
-            hintText: 'Search...',
-            filled: true,
-            fillColor: const Color.fromARGB(116, 255, 255, 255),
-            border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15)))),
-      ),
-      suggestionsCallback: (pattern) async {
-        return ['Stuttgart', 'Pforzheim', 'Reutlingen'];
-      },
-      hideOnEmpty: true,
-      itemBuilder: (context, suggestion) {
-        return Text(suggestion);
-      },
-      onSuggestionSelected: (suggestion) {
-        //Provider add und validieren
-      },
-    );
-
-    /*
-    TextField(
-      onChanged: onChanged,
-      controller: textController,
-      decoration: InputDecoration(
-          errorText: error,
-          prefixIcon: const Icon(
+        decoration: const InputDecoration(
+          prefixIcon: Icon(
             Icons.search,
           ),
           hintText: 'Search...',
           filled: true,
-          fillColor: const Color.fromARGB(116, 255, 255, 255),
-          border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15)))),
+          fillColor: Color.fromARGB(116, 255, 255, 255),
+        ),
+      ),
+      suggestionsCallback: (pattern) async {
+        return suggetionsServiceProvider.getSuggestions(pattern);
+      },
+      itemBuilder: (context, suggestion) {
+        return Container(
+          decoration: const BoxDecoration(border: Border(bottom: BorderSide())),
+          height: 56,
+          child: ListTile(
+            title: Text(suggestion.name!),
+            subtitle: Text(suggestion.country!),
+          ),
+        );
+      },
+      onSuggestionSelected: (suggestion) {
+        ref.read(homeProvider.notifier).addLocation(suggestion);
+        callback();
+      },
     );
-    */
   }
 }
