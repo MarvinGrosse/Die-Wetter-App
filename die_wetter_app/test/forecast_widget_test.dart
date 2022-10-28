@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:die_wetter_app/models/weather_data.dart';
+import 'package:die_wetter_app/models/weather_models/weather_data.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:die_wetter_app/widgets/forecast_widget.dart';
 import 'package:flutter/material.dart';

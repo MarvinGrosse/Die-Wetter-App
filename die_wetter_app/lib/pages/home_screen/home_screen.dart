@@ -11,20 +11,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 //import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-/**
- * () async {
-                          final bool? shouldRefresh =
-                              await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const AddScreen(),
-                            ),
-                          );
-                          if (shouldRefresh ?? false) {
-                            weatherController.getWeather();
-                          }
-                        },
- */
-
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -55,6 +41,7 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.read(databaseProvider).resetDB();
     final state = ref.watch(homeProvider);
     final homeNotifier = ref.read(homeProvider.notifier);
 
@@ -131,7 +118,7 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
                                               subtitle: Text(weather[index]
                                                   .weather
                                                   .weather![0]
-                                                  .main!),
+                                                  .main),
                                               leading: SizedBox(
                                                 width: 80,
                                                 child: getWeatherIcon(
@@ -142,14 +129,16 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
                                                         'noimage'),
                                               ),
                                               trailing: Text(
-                                                '${weather[index].weather.main!.temp!}°c', //.celsius!.toStringAsFixed(0)
+                                                '${weather[index].weather.main.temp ?? '-'}',
                                                 style: const TextStyle(
                                                     fontSize: 30),
                                               ),
                                             ),
+                                            /**
                                             ForecastWidget(
                                                 forecast:
                                                     weather[index].forecast)
+                                                     */
                                           ]),
                                     )),
                               ),
@@ -185,6 +174,8 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
   }
 }
 
+
+/**
 class xHomeScreen extends ConsumerWidget {
   const xHomeScreen({super.key});
 
@@ -302,7 +293,7 @@ class xHomeScreen extends ConsumerWidget {
                                                             'noimage'),
                                               ),
                                               trailing: Text(
-                                                '${weather[index].weather.main!.temp!.celsius!.toStringAsFixed(0)}°c', //.celsius!.toStringAsFixed(0)
+                                                '${weather[index].weather.main?.temp?.celsius}', //.celsius!.toStringAsFixed(0) //'
                                                 style: const TextStyle(
                                                     fontSize: 30),
                                               ),
@@ -344,6 +335,7 @@ class xHomeScreen extends ConsumerWidget {
     );
   }
 }
+ */
 
 
 /**

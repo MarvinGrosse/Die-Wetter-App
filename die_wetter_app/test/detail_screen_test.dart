@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:die_wetter_app/models/locations.dart';
-import 'package:die_wetter_app/models/weather_data.dart';
+import 'package:die_wetter_app/models/weather_models/weather_data.dart';
 import 'package:die_wetter_app/pages/detail_screen.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter/material.dart';

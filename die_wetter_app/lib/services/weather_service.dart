@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:die_wetter_app/models/today_weather.dart';
+import 'package:die_wetter_app/models/weather_models/today_weather.dart';
 import 'package:flutter/material.dart';
 //import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:weather/weather.dart';
 import 'package:die_wetter_app/services/database_helper.dart';
 import '../models/locations.dart';
-import '../models/weather_data.dart';
+import '../models/weather_models/forcast_weather.dart';
+import '../models/weather_models/weather_data.dart';
 
 const String _apiKey = '7e12052d9bea3a2d6045ce0bec3bb6d8';
 
@@ -23,54 +24,12 @@ final StackTrace noLocationsError =
 
 class WeatherProviderNotifier
     extends StateNotifier<AsyncValue<List<WeatherData>>> {
-  WeatherProviderNotifier(this.ref) : super(const AsyncLoading()) {
-    getWeather();
-  }
+  WeatherProviderNotifier(this.ref) : super(const AsyncLoading());
 
   Ref ref;
 
   List<Location> locationNames = [];
   List<WeatherData> weatherList = [];
-
-  void getWeather() async {
-    state = const AsyncLoading();
-    locationNames = [];
-    weatherList = [];
-
-    // laden der gespeicherten Locations aus der lokeln Datenbank.
-    try {
-      locationNames = await ref.read(databaseProvider).getAllLocations();
-    } catch (e) {
-      state = AsyncValue.error(
-          Error,
-          StackTrace.fromString(
-              'stored locations could not be loaded. try again'));
-    }
-
-    //checken ob locations leer sind, falls ja state setzten.
-    if (locationNames.isEmpty) {
-      state = AsyncError(Error, noLocationsError);
-    } else {
-      // loopen über die Locations der Datenbank und fetchen des Wetters der Api.
-      for (var element in locationNames) {
-        try {
-          TodayWeather w = await ref
-              .read(weatherServiceProvider)
-              .getTodaysWeather(element.name);
-          List<MyWeather> f = await ref
-              .read(weatherServiceProvider)
-              .getDailyForecastFiveDays(element.name);
-          List<HourlyWeather> hf =
-              []; //await getHourForecast(element.name); Funktioniert nicht weil aki key anscheinend nicht valide für diesen call
-          weatherList.add(WeatherData(w, f, hf, element));
-        } catch (e) {
-          state = AsyncError(Error(), StackTrace.fromString(e.toString()));
-          log(e.toString());
-        }
-      }
-      state = AsyncData(weatherList);
-    }
-  }
 
   // returns the Icon for the Weather API
   getWeatherIcon(String data) {
@@ -113,7 +72,7 @@ class WeatherService {
     http.Response response = await _httpClient.get(Uri.parse(url));
 
     /// Perform error checking on response:
-    if (response.statusCode == STATUS_OK) {
+    if (response.statusCode < 400) {
       //log(response.body.toString());
       Map<String, dynamic> jsonBody = json.decode(response.body);
       return TodayWeather.fromJson(jsonBody);
@@ -132,6 +91,23 @@ class WeatherService {
     _httpClient = http.Client();
   }
 
+  Future<ForecastWeather> getForcastWeather(String cityName) async {
+    String url =
+        "https://api.openweathermap.org/data/2.5/forecast?q=$cityName&cnt=14&appid=$_apiKey&lang=en";
+
+    /// Send HTTP get response with the url
+    http.Response response = await _httpClient.get(Uri.parse(url));
+
+    /// Perform error checking on response:
+    if (response.statusCode < 400) {
+      //log(response.body.toString());
+      Map<String, dynamic> jsonBody = json.decode(response.body);
+      return ForecastWeather.fromJson(jsonBody);
+    } else {
+      throw OpenWeatherAPIException("API Error: ${response.body}");
+    }
+  }
+/**
   Future<List<MyWeather>> getDailyForecastFiveDays(String cityName) async {
     Map<String, dynamic>? jsonForecast =
         await _sendAPIRequest(cityName, FIVE_DAY_FORECAST);
@@ -145,7 +121,9 @@ class WeatherService {
     List<HourlyWeather> forecast = parseForecastHourly(jsonForecast!);
     return forecast;
   }
+   */
 
+/**
   Future<Map<String, dynamic>?> _sendAPIRequest(
       String cityName, String forecastType) async {
     String url =
@@ -164,6 +142,7 @@ class WeatherService {
           "The API threw an exception: ${response.body}");
     }
   }
+
 
   List<MyWeather> parseForecast(
     Map<String, dynamic> jsonForecast,
@@ -229,4 +208,5 @@ class WeatherService {
     }
     return null;
   }
+   */
 }

@@ -1,4 +1,4 @@
-import 'package:die_wetter_app/models/today_weather.dart';
+import 'package:die_wetter_app/models/weather_models/today_weather.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,10 +58,9 @@ class DayWeatherWidget extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      data.date == null
+                      data.dt == null
                           ? '-'
-                          : DateFormat('EEEE').format(
-                              DateTime.fromMillisecondsSinceEpoch(data.date!)),
+                          : DateFormat('EEEE').format(data.dt),
                     ),
                     Text(
                       DateFormat('kk:mm').format(DateTime.now()),
@@ -71,7 +70,7 @@ class DayWeatherWidget extends ConsumerWidget {
                   ],
                 ),
                 Text(
-                  '${data.main!.temp!}°c', //.celsius!.toStringAsFixed(0)
+                  '${data.main.temp}',
                   style: const TextStyle(fontSize: 50),
                 ),
                 SizedBox(
@@ -90,19 +89,19 @@ class DayWeatherWidget extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          'Wind Direct: ${getDirection(data.wind?.deg!.toDouble() ?? 500)}'),
+                          'Wind Direct: ${getDirection(data.wind.deg.toDouble() ?? 500)}'),
                       Text(
-                          'Wind Speed: ${(data.wind?.speed!.toDouble() ?? 0 * (60 * 60) / 1000)}km/h')
+                          'Wind Speed: ${(data.wind.speed.toDouble() ?? 0 * (60 * 60) / 1000)}km/h')
                     ],
                   ),
                   Column(
                     children: [
-                      Text(data.weather![0].description ?? '-'),
+                      Text(data.weather?.first.description ?? '-'),
                       Text(
-                        'Max: ${data.main?.tempMax! ?? '-'}°c', //data.main?.tempMax?.celsius?.toStringAsFixed(0)
+                        'Max: ${data.main.temp_max! ?? '-'}°c', //data.main?.tempMax?.celsius?.toStringAsFixed(0)
                       ),
                       Text(
-                        'Min: ${data.main?.tempMin! ?? '-'}°c', //data.main?.tempMin?.celsius?.toStringAsFixed(0)
+                        'Min: ${data.main.temp_min ?? '-'}°c', //data.main?.tempMin?.celsius?.toStringAsFixed(0)
                       )
                     ],
                   )

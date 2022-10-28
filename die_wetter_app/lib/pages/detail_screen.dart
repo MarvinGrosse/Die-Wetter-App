@@ -1,4 +1,4 @@
-import 'package:die_wetter_app/models/weather_data.dart';
+import 'package:die_wetter_app/models/weather_models/weather_data.dart';
 import 'package:die_wetter_app/services/database_helper.dart';
 import 'package:die_wetter_app/widgets/forecast_widget.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +27,7 @@ class DetailScreen extends ConsumerWidget {
           DayWeatherWidget(
             data: data.weather,
           ),
+          /**
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
@@ -36,6 +37,7 @@ class DetailScreen extends ConsumerWidget {
               child: ForecastWidget(forecast: data.forecast),
             ),
           ),
+           */
           /**
         Card(
           shape: RoundedRectangleBorder(

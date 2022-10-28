@@ -1,16 +1,18 @@
-import 'package:die_wetter_app/models/today_weather.dart';
+import 'package:die_wetter_app/models/weather_models/forcast_weather.dart';
+import 'package:die_wetter_app/models/weather_models/helper_classes.dart';
+import 'package:die_wetter_app/models/weather_models/today_weather.dart';
 //import 'package:weather/weather.dart';
-import 'locations.dart';
+import '../locations.dart';
 //import 'today_weather.dart' as Temperature;
 
 //Data to use inside the App
 class WeatherData {
   final TodayWeather weather;
-  final List<MyWeather> forecast;
-  final List<HourlyWeather> hourForecast;
+  //final ForecastWeather forecast;
+  //final List<HourlyWeather> hourForecast;
   final Location location;
 
-  WeatherData(this.weather, this.forecast, this.hourForecast, this.location);
+  WeatherData(this.weather, this.location);
 }
 
 //Weather class to use when api request for 5 day forecast
@@ -34,7 +36,7 @@ class MyWeather {
       _snowLast3Hours;
 
   int? _weatherConditionCode;
-
+/**
   MyWeather(Map<String, dynamic> jsonData) {
     Map<String, dynamic>? city = jsonData['city'];
     Map<String, dynamic>? temp = jsonData['temp'];
@@ -239,9 +241,14 @@ DateTime? _unpackDate(Map<String, dynamic>? M, String k) {
   return null;
 }
 
+ */
+/**
 /// Unpacks a [double] value from a [Map] object and converts this to
 /// a [Temperature] object.
 Temperature _unpackTemperature(Map<String, dynamic>? M, String k) {
   double? kelvin = _unpackDouble(M, k);
   return Temperature(kelvin);
+}
+
+ */
 }

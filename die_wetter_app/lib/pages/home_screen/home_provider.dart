@@ -1,4 +1,5 @@
-import 'package:die_wetter_app/models/today_weather.dart';
+import 'package:die_wetter_app/models/weather_models/forcast_weather.dart';
+import 'package:die_wetter_app/models/weather_models/today_weather.dart';
 import 'package:die_wetter_app/services/database_helper.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +8,7 @@ import 'package:weather/weather.dart';
 
 import '../../models/city.dart';
 import '../../models/locations.dart';
-import '../../models/weather_data.dart';
+import '../../models/weather_models/weather_data.dart';
 
 final homeProvider =
     StateNotifierProvider<HomeNotifier, AsyncValue<List<WeatherData>>>(
@@ -47,21 +48,19 @@ class HomeNotifier extends StateNotifier<AsyncValue<List<WeatherData>>> {
     } else {
       // loopen über die Locations der Datenbank und fetchen des Wetters der Api.
       for (var element in locationNames) {
-        try {
-          TodayWeather w = await ref
-              .read(weatherServiceProvider)
-              .getTodaysWeather(element.name);
-          print('TODAYS WEATGEHR: $w');
-          List<MyWeather> f = await ref
-              .read(weatherServiceProvider)
-              .getDailyForecastFiveDays(element.name);
-          List<HourlyWeather> hf =
-              []; //await getHourForecast(element.name); Funktioniert nicht weil aki key anscheinend nicht valide für diesen call
-          weatherList.add(WeatherData(w, f, hf, element));
-        } catch (e) {
+        //try {
+        TodayWeather w = await ref
+            .read(weatherServiceProvider)
+            .getTodaysWeather(element.name);
+
+        //ForecastWeather f = await ref.read(weatherServiceProvider).getForcastWeather(element.name);
+        //List<HourlyWeather> hf = []; //await getHourForecast(element.name); Funktioniert nicht weil aki key anscheinend nicht valide für diesen call
+        weatherList.add(WeatherData(w, element));
+        /**
+        } catch (e, s) {
           state = AsyncError(Error(), StackTrace.fromString(e.toString()));
           print(e.toString());
-        }
+        } */
       }
       state = AsyncData(weatherList);
     }
