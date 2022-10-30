@@ -134,11 +134,9 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
                                                     fontSize: 30),
                                               ),
                                             ),
-                                            /**
                                             ForecastWidget(
                                                 forecast:
                                                     weather[index].forecast)
-                                                     */
                                           ]),
                                     )),
                               ),

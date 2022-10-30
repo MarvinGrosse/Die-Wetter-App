@@ -1,4 +1,4 @@
-import 'package:die_wetter_app/models/weather_models/forcast_weather.dart';
+import 'package:die_wetter_app/models/weather_models/forecast_weather.dart';
 import 'package:die_wetter_app/models/weather_models/today_weather.dart';
 import 'package:die_wetter_app/services/database_helper.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
@@ -48,19 +48,20 @@ class HomeNotifier extends StateNotifier<AsyncValue<List<WeatherData>>> {
     } else {
       // loopen über die Locations der Datenbank und fetchen des Wetters der Api.
       for (var element in locationNames) {
-        //try {
-        TodayWeather w = await ref
-            .read(weatherServiceProvider)
-            .getTodaysWeather(element.name);
+        try {
+          TodayWeather w = await ref
+              .read(weatherServiceProvider)
+              .getTodaysWeather(element.name);
 
-        //ForecastWeather f = await ref.read(weatherServiceProvider).getForcastWeather(element.name);
-        //List<HourlyWeather> hf = []; //await getHourForecast(element.name); Funktioniert nicht weil aki key anscheinend nicht valide für diesen call
-        weatherList.add(WeatherData(w, element));
-        /**
+          ForecastWeather f = await ref
+              .read(weatherServiceProvider)
+              .getForcastWeather(element.name);
+          //List<HourlyWeather> hf = []; //await getHourForecast(element.name); Funktioniert nicht weil aki key anscheinend nicht valide für diesen call
+          weatherList.add(WeatherData(w, f, element));
         } catch (e, s) {
           state = AsyncError(Error(), StackTrace.fromString(e.toString()));
           print(e.toString());
-        } */
+        }
       }
       state = AsyncData(weatherList);
     }
@@ -86,9 +87,7 @@ class HomeNotifier extends StateNotifier<AsyncValue<List<WeatherData>>> {
 
   void addLocation(City city) async {
     try {
-      await ref
-          .read(weatherFactoryProvider)
-          .currentWeatherByCityName(city.name!);
+      await ref.read(weatherServiceProvider).getTodaysWeather(city.name!);
       await ref.read(databaseProvider).insertLocation(
           Location(id: const Uuid().v4().toString(), name: city.name!));
       getWeather();

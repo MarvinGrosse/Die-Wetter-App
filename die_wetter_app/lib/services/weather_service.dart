@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:weather/weather.dart';
 import 'package:die_wetter_app/services/database_helper.dart';
 import '../models/locations.dart';
-import '../models/weather_models/forcast_weather.dart';
+import '../models/weather_models/forecast_weather.dart';
 import '../models/weather_models/weather_data.dart';
 
 const String _apiKey = '7e12052d9bea3a2d6045ce0bec3bb6d8';

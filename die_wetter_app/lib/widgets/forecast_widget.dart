@@ -1,10 +1,11 @@
-import 'package:die_wetter_app/models/weather_models/forcast_weather.dart';
+import 'package:die_wetter_app/models/weather_models/forecast_weather.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 //import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../models/weather_models/helper_classes.dart';
 import '../models/weather_models/weather_data.dart';
 
 class ForecastWidget extends ConsumerWidget {
@@ -14,10 +15,10 @@ class ForecastWidget extends ConsumerWidget {
 
   // Function to display one Tile of the Forcast
   // Example Forcast for 5 Days, oneTileForcast() displays Monday
-  Widget oneTileForecast(Data weather, WidgetRef ref) {
-    String lowToHighTemp = weather.temp == null || weather == null
+  Widget oneTileForecast(ForecastWeatherData weather, WidgetRef ref) {
+    String lowToHighTemp = weather.temp.min == null || weather.temp.max == null
         ? '-'
-        : '${weather.temp?.min.toString()}°c/${weather.temp?.max.toString()}°c';
+        : '${weather.temp.min.toString()}°c/${weather.temp.max.toString()}°c';
 
     final weatherController = ref.read(weatherProvider.notifier);
 
@@ -27,7 +28,7 @@ class ForecastWidget extends ConsumerWidget {
           weather.dt == null
               ? '-'
               : DateFormat('EEEE')
-                  .format(DateTime.fromMillisecondsSinceEpoch(weather.dt!))
+                  .format(weather.dt!)
                   .substring(0, 3)
                   .toUpperCase(),
           style: const TextStyle(fontSize: 10),
@@ -46,7 +47,7 @@ class ForecastWidget extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        for (var i in forecast.list!) (oneTileForecast(i, ref)),
+        for (var i in forecast.list) (oneTileForecast(i, ref)),
       ],
     );
   }

@@ -10,7 +10,7 @@ class ForecastWeather {
 
   @JsonKey(name: 'city', fromJson: _namefromJson)
   String name;
-  List<ForecastWeatherData>? list;
+  List<ForecastWeatherData> list;
 
   factory ForecastWeather.fromJson(Map<String, dynamic> json) =>
       _$ForecastWeatherFromJson(json);

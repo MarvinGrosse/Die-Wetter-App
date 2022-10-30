@@ -1,4 +1,4 @@
-import 'package:die_wetter_app/models/weather_models/forcast_weather.dart';
+import 'package:die_wetter_app/models/weather_models/forecast_weather.dart';
 import 'package:die_wetter_app/models/weather_models/helper_classes.dart';
 import 'package:die_wetter_app/models/weather_models/today_weather.dart';
 //import 'package:weather/weather.dart';
@@ -8,11 +8,11 @@ import '../locations.dart';
 //Data to use inside the App
 class WeatherData {
   final TodayWeather weather;
-  //final ForecastWeather forecast;
+  final ForecastWeather forecast;
   //final List<HourlyWeather> hourForecast;
   final Location location;
 
-  WeatherData(this.weather, this.location);
+  WeatherData(this.weather, this.forecast, this.location);
 }
 
 //Weather class to use when api request for 5 day forecast

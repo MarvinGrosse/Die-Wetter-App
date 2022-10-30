@@ -85,7 +85,9 @@ class ForecastWeatherData {
 
   @JsonKey(fromJson: _fromJson, toJson: _toJson)
   DateTime dt;
+
   ForecastTemperature temp;
+
   List<Weather> weather;
 
   factory ForecastWeatherData.fromJson(Map<String, dynamic> json) =>
@@ -106,6 +108,10 @@ class ForecastTemperature {
   Temperature min;
   @JsonKey(fromJson: _maxFromJson, toJson: _maxToJson)
   Temperature max;
+
+  factory ForecastTemperature.fromJson(Map<String, dynamic> json) =>
+      _$ForecastTemperatureFromJson(json);
+  Map<String, dynamic> toJson() => _$ForecastTemperatureToJson(this);
 
   static _dayFromJson(double day) => Temperature(day);
   static _dayToJson(Temperature day) => day.kelvin.toDouble();
