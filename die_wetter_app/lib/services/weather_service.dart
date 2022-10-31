@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:die_wetter_app/models/weather_models/today_weather.dart';
 import 'package:flutter/material.dart';
-//import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather/weather.dart';
@@ -81,11 +79,11 @@ class WeatherService {
     }
   }
 
-  static const int STATUS_OK = 200;
-  static const String FIVE_DAY_FORECAST = 'daily';
-  static const String HOURLY_FORECAST = 'hourly';
+  //static const int STATUS_OK = 200;
+  //static const String FIVE_DAY_FORECAST = 'daily';
+  //static const String HOURLY_FORECAST = 'hourly';
   late http.Client _httpClient;
-  WeatherFactory wf = WeatherFactory('7e12052d9bea3a2d6045ce0bec3bb6d8');
+  //WeatherFactory wf = WeatherFactory('7e12052d9bea3a2d6045ce0bec3bb6d8');
 
   WeatherService() {
     _httpClient = http.Client();
@@ -93,7 +91,7 @@ class WeatherService {
 
   Future<ForecastWeather> getForcastWeather(String cityName) async {
     String url =
-        "https://api.openweathermap.org/data/2.5/forecast?q=$cityName&cnt=14&appid=$_apiKey&lang=en";
+        "https://api.openweathermap.org/data/2.5/forecast/daily?q=$cityName&cnt=14&appid=$_apiKey&lang=en";
 
     /// Send HTTP get response with the url
     http.Response response = await _httpClient.get(Uri.parse(url));

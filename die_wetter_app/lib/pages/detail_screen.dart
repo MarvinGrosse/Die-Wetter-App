@@ -18,7 +18,7 @@ class DetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(data.weather.name ?? "No name..."),
+        title: Text(data.weather.name),
         centerTitle: true,
       ),
       body: Padding(
@@ -27,7 +27,6 @@ class DetailScreen extends ConsumerWidget {
           DayWeatherWidget(
             data: data.weather,
           ),
-          /**
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
@@ -37,7 +36,7 @@ class DetailScreen extends ConsumerWidget {
               child: ForecastWidget(forecast: data.forecast),
             ),
           ),
-           */
+
           /**
         Card(
           shape: RoundedRectangleBorder(

@@ -45,6 +45,9 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
     final state = ref.watch(homeProvider);
     final homeNotifier = ref.read(homeProvider.notifier);
 
+    //closes Keyboard
+    FocusManager.instance.primaryFocus?.unfocus();
+
     return MaterialApp(
       theme: ThemeData(scaffoldBackgroundColor: Colors.lightBlue[50]),
       home: Scaffold(
@@ -59,7 +62,7 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
                       itemCount: weather.length,
                       itemBuilder: (context, index) {
                         return SizedBox(
-                            height: 250,
+                            height: 220,
                             child: Slidable(
                               key: ValueKey(index),
                               endActionPane: ActionPane(
@@ -109,9 +112,10 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            ListTile(
+                                            Expanded(
+                                                child: ListTile(
                                               title: Text(
-                                                weather[index].weather.name!,
+                                                weather[index].weather.name,
                                                 key: const Key(
                                                     'LocationTitleHomeScreen'),
                                               ),
@@ -120,20 +124,24 @@ class _HomescreenState extends ConsumerState<HomeScreen> {
                                                   .weather![0]
                                                   .main),
                                               leading: SizedBox(
-                                                width: 80,
-                                                child: getWeatherIcon(
+                                                  width: 80,
+                                                  child: weather[index]
+                                                      .weather
+                                                      .weather![0]
+                                                      .icon
+                                                  /*getWeatherIcon(
                                                     weather[index]
-                                                            .weather
-                                                            .weather![0]
-                                                            .icon ??
-                                                        'noimage'),
-                                              ),
+                                                        .weather
+                                                        .weather![0]
+                                                        .icon),*/
+                                                  ),
                                               trailing: Text(
-                                                '${weather[index].weather.main.temp ?? '-'}',
+                                                '${weather[index].weather.main.temp}',
                                                 style: const TextStyle(
                                                     fontSize: 30),
                                               ),
-                                            ),
+                                            )),
+                                            const Divider(thickness: 1),
                                             ForecastWidget(
                                                 forecast:
                                                     weather[index].forecast)

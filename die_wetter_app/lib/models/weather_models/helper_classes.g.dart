@@ -19,14 +19,14 @@ Weather _$WeatherFromJson(Map<String, dynamic> json) => Weather(
       json['id'] as int,
       json['main'] as String,
       json['description'] as String,
-      json['icon'] as String,
+      Weather._iconFromJson(json['icon'] as String),
     );
 
 Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
       'id': instance.id,
       'main': instance.main,
       'description': instance.description,
-      'icon': instance.icon,
+      'icon': Weather._iconToJson(instance.icon),
     };
 
 MainData _$MainDataFromJson(Map<String, dynamic> json) => MainData(
@@ -72,9 +72,9 @@ Map<String, dynamic> _$ForecastWeatherDataToJson(
 
 ForecastTemperature _$ForecastTemperatureFromJson(Map<String, dynamic> json) =>
     ForecastTemperature(
-      ForecastTemperature._dayFromJson(json['day'] as double),
-      ForecastTemperature._minFromJson(json['min'] as double),
-      ForecastTemperature._maxFromJson(json['max'] as double),
+      ForecastTemperature._dayFromJson(json['day'] as num),
+      ForecastTemperature._minFromJson(json['min'] as num),
+      ForecastTemperature._maxFromJson(json['max'] as num),
     );
 
 Map<String, dynamic> _$ForecastTemperatureToJson(

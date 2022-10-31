@@ -19,6 +19,7 @@ class TodayWeather {
       _$TodayWeatherFromJson(json);
   Map<String, dynamic> toJson() => _$TodayWeatherToJson(this);
 
-  static DateTime _fromJson(int dt) => DateTime.fromMillisecondsSinceEpoch(dt);
+  static DateTime _fromJson(int dt) =>
+      DateTime.fromMillisecondsSinceEpoch(dt * 1000);
   static int _toJson(DateTime time) => time.millisecondsSinceEpoch;
 }

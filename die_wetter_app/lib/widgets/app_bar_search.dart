@@ -1,9 +1,6 @@
 import 'package:die_wetter_app/pages/home_screen/home_provider.dart';
 import 'package:die_wetter_app/services/cities_service.dart';
-import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
@@ -88,6 +85,7 @@ class AppBarTextField extends ConsumerWidget {
 
     return TypeAheadField(
       textFieldConfiguration: TextFieldConfiguration(
+        autofocus: true,
         controller: textController,
         decoration: const InputDecoration(
           prefixIcon: Icon(
@@ -103,9 +101,13 @@ class AppBarTextField extends ConsumerWidget {
       },
       itemBuilder: (context, suggestion) {
         return Container(
-          decoration: const BoxDecoration(border: Border(bottom: BorderSide())),
-          height: 56,
+          decoration: const BoxDecoration(
+              border:
+                  Border(bottom: BorderSide(width: 0.5, color: Colors.grey))),
+          //height: 56,
           child: ListTile(
+            visualDensity: const VisualDensity(vertical: -4),
+            dense: true,
             title: Text(suggestion.name!),
             subtitle: Text(suggestion.country!),
           ),

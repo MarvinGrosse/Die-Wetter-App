@@ -3,15 +3,17 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i7;
-import 'dart:convert' as _i10;
-import 'dart:typed_data' as _i11;
+import 'dart:async' as _i8;
+import 'dart:convert' as _i11;
+import 'dart:typed_data' as _i12;
 
-import 'package:die_wetter_app/models/locations.dart' as _i8;
+import 'package:die_wetter_app/models/locations.dart' as _i9;
+import 'package:die_wetter_app/models/weather_models/forecast_weather.dart'
+    as _i5;
 import 'package:die_wetter_app/models/weather_models/today_weather.dart' as _i4;
-import 'package:die_wetter_app/services/database_helper.dart' as _i6;
-import 'package:die_wetter_app/services/weather_service.dart' as _i9;
-import 'package:http/http.dart' as _i5;
+import 'package:die_wetter_app/services/database_helper.dart' as _i7;
+import 'package:die_wetter_app/services/weather_service.dart' as _i10;
+import 'package:http/http.dart' as _i6;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:sqflite/sqflite.dart' as _i2;
 import 'package:weather/weather.dart' as _i3;
@@ -47,9 +49,8 @@ class _FakeWeather_1 extends _i1.SmartFake implements _i3.Weather {
         );
 }
 
-class _FakeWeatherFactory_2 extends _i1.SmartFake
-    implements _i3.WeatherFactory {
-  _FakeWeatherFactory_2(
+class _FakeTodayWeather_2 extends _i1.SmartFake implements _i4.TodayWeather {
+  _FakeTodayWeather_2(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -58,8 +59,9 @@ class _FakeWeatherFactory_2 extends _i1.SmartFake
         );
 }
 
-class _FakeTodayWeather_3 extends _i1.SmartFake implements _i4.TodayWeather {
-  _FakeTodayWeather_3(
+class _FakeForecastWeather_3 extends _i1.SmartFake
+    implements _i5.ForecastWeather {
+  _FakeForecastWeather_3(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -68,7 +70,7 @@ class _FakeTodayWeather_3 extends _i1.SmartFake implements _i4.TodayWeather {
         );
 }
 
-class _FakeResponse_4 extends _i1.SmartFake implements _i5.Response {
+class _FakeResponse_4 extends _i1.SmartFake implements _i6.Response {
   _FakeResponse_4(
     Object parent,
     Invocation parentInvocation,
@@ -79,7 +81,7 @@ class _FakeResponse_4 extends _i1.SmartFake implements _i5.Response {
 }
 
 class _FakeStreamedResponse_5 extends _i1.SmartFake
-    implements _i5.StreamedResponse {
+    implements _i6.StreamedResponse {
   _FakeStreamedResponse_5(
     Object parent,
     Invocation parentInvocation,
@@ -92,7 +94,7 @@ class _FakeStreamedResponse_5 extends _i1.SmartFake
 /// A class which mocks [DBHandler].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDBHandler extends _i1.Mock implements _i6.DBHandler {
+class MockDBHandler extends _i1.Mock implements _i7.DBHandler {
   MockDBHandler() {
     _i1.throwOnMissingStub(this);
   }
@@ -114,37 +116,37 @@ class MockDBHandler extends _i1.Mock implements _i6.DBHandler {
         returnValueForMissingStub: null,
       );
   @override
-  _i7.Future<_i2.Database> get database => (super.noSuchMethod(
+  _i8.Future<_i2.Database> get database => (super.noSuchMethod(
         Invocation.getter(#database),
-        returnValue: _i7.Future<_i2.Database>.value(_FakeDatabase_0(
+        returnValue: _i8.Future<_i2.Database>.value(_FakeDatabase_0(
           this,
           Invocation.getter(#database),
         )),
-      ) as _i7.Future<_i2.Database>);
+      ) as _i8.Future<_i2.Database>);
   @override
-  _i7.Future<int> insertLocation(_i8.Location? location) => (super.noSuchMethod(
+  _i8.Future<int> insertLocation(_i9.Location? location) => (super.noSuchMethod(
         Invocation.method(
           #insertLocation,
           [location],
         ),
-        returnValue: _i7.Future<int>.value(0),
-      ) as _i7.Future<int>);
+        returnValue: _i8.Future<int>.value(0),
+      ) as _i8.Future<int>);
   @override
-  _i7.Future<List<_i8.Location>> getAllLocations() => (super.noSuchMethod(
+  _i8.Future<List<_i9.Location>> getAllLocations() => (super.noSuchMethod(
         Invocation.method(
           #getAllLocations,
           [],
         ),
-        returnValue: _i7.Future<List<_i8.Location>>.value(<_i8.Location>[]),
-      ) as _i7.Future<List<_i8.Location>>);
+        returnValue: _i8.Future<List<_i9.Location>>.value(<_i9.Location>[]),
+      ) as _i8.Future<List<_i9.Location>>);
   @override
-  _i7.Future<int> deleteLocation(String? id) => (super.noSuchMethod(
+  _i8.Future<int> deleteLocation(String? id) => (super.noSuchMethod(
         Invocation.method(
           #deleteLocation,
           [id],
         ),
-        returnValue: _i7.Future<int>.value(0),
-      ) as _i7.Future<int>);
+        returnValue: _i8.Future<int>.value(0),
+      ) as _i8.Future<int>);
   @override
   void resetDB() => super.noSuchMethod(
         Invocation.method(
@@ -177,7 +179,7 @@ class MockWeatherFactory extends _i1.Mock implements _i3.WeatherFactory {
         returnValueForMissingStub: null,
       );
   @override
-  _i7.Future<_i3.Weather> currentWeatherByLocation(
+  _i8.Future<_i3.Weather> currentWeatherByLocation(
     double? latitude,
     double? longitude,
   ) =>
@@ -189,7 +191,7 @@ class MockWeatherFactory extends _i1.Mock implements _i3.WeatherFactory {
             longitude,
           ],
         ),
-        returnValue: _i7.Future<_i3.Weather>.value(_FakeWeather_1(
+        returnValue: _i8.Future<_i3.Weather>.value(_FakeWeather_1(
           this,
           Invocation.method(
             #currentWeatherByLocation,
@@ -199,24 +201,24 @@ class MockWeatherFactory extends _i1.Mock implements _i3.WeatherFactory {
             ],
           ),
         )),
-      ) as _i7.Future<_i3.Weather>);
+      ) as _i8.Future<_i3.Weather>);
   @override
-  _i7.Future<_i3.Weather> currentWeatherByCityName(String? cityName) =>
+  _i8.Future<_i3.Weather> currentWeatherByCityName(String? cityName) =>
       (super.noSuchMethod(
         Invocation.method(
           #currentWeatherByCityName,
           [cityName],
         ),
-        returnValue: _i7.Future<_i3.Weather>.value(_FakeWeather_1(
+        returnValue: _i8.Future<_i3.Weather>.value(_FakeWeather_1(
           this,
           Invocation.method(
             #currentWeatherByCityName,
             [cityName],
           ),
         )),
-      ) as _i7.Future<_i3.Weather>);
+      ) as _i8.Future<_i3.Weather>);
   @override
-  _i7.Future<List<_i3.Weather>> fiveDayForecastByLocation(
+  _i8.Future<List<_i3.Weather>> fiveDayForecastByLocation(
     double? latitude,
     double? longitude,
   ) =>
@@ -228,79 +230,70 @@ class MockWeatherFactory extends _i1.Mock implements _i3.WeatherFactory {
             longitude,
           ],
         ),
-        returnValue: _i7.Future<List<_i3.Weather>>.value(<_i3.Weather>[]),
-      ) as _i7.Future<List<_i3.Weather>>);
+        returnValue: _i8.Future<List<_i3.Weather>>.value(<_i3.Weather>[]),
+      ) as _i8.Future<List<_i3.Weather>>);
   @override
-  _i7.Future<List<_i3.Weather>> fiveDayForecastByCityName(String? cityName) =>
+  _i8.Future<List<_i3.Weather>> fiveDayForecastByCityName(String? cityName) =>
       (super.noSuchMethod(
         Invocation.method(
           #fiveDayForecastByCityName,
           [cityName],
         ),
-        returnValue: _i7.Future<List<_i3.Weather>>.value(<_i3.Weather>[]),
-      ) as _i7.Future<List<_i3.Weather>>);
+        returnValue: _i8.Future<List<_i3.Weather>>.value(<_i3.Weather>[]),
+      ) as _i8.Future<List<_i3.Weather>>);
 }
 
 /// A class which mocks [WeatherService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockWeatherService extends _i1.Mock implements _i9.WeatherService {
+class MockWeatherService extends _i1.Mock implements _i10.WeatherService {
   MockWeatherService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.WeatherFactory get wf => (super.noSuchMethod(
-        Invocation.getter(#wf),
-        returnValue: _FakeWeatherFactory_2(
-          this,
-          Invocation.getter(#wf),
-        ),
-      ) as _i3.WeatherFactory);
-  @override
-  set wf(_i3.WeatherFactory? _wf) => super.noSuchMethod(
-        Invocation.setter(
-          #wf,
-          _wf,
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
-  _i7.Future<_i4.TodayWeather> getTodaysWeather(String? cityName) =>
+  _i8.Future<_i4.TodayWeather> getTodaysWeather(String? cityName) =>
       (super.noSuchMethod(
         Invocation.method(
           #getTodaysWeather,
           [cityName],
         ),
-        returnValue: _i7.Future<_i4.TodayWeather>.value(_FakeTodayWeather_3(
+        returnValue: _i8.Future<_i4.TodayWeather>.value(_FakeTodayWeather_2(
           this,
           Invocation.method(
             #getTodaysWeather,
             [cityName],
           ),
         )),
-      ) as _i7.Future<_i4.TodayWeather>);
+      ) as _i8.Future<_i4.TodayWeather>);
   @override
-  _i7.Future<dynamic> getForcastWeather(String? cityName) =>
+  _i8.Future<_i5.ForecastWeather> getForcastWeather(String? cityName) =>
       (super.noSuchMethod(
         Invocation.method(
           #getForcastWeather,
           [cityName],
         ),
-        returnValue: _i7.Future<dynamic>.value(),
-      ) as _i7.Future<dynamic>);
+        returnValue:
+            _i8.Future<_i5.ForecastWeather>.value(_FakeForecastWeather_3(
+          this,
+          Invocation.method(
+            #getForcastWeather,
+            [cityName],
+          ),
+        )),
+      ) as _i8.Future<_i5.ForecastWeather>);
 }
 
 /// A class which mocks [Client].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockClient extends _i1.Mock implements _i5.Client {
+class MockClient extends _i1.Mock implements _i6.Client {
   MockClient() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i7.Future<_i5.Response> head(
+  _i8.Future<_i6.Response> head(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -310,7 +303,7 @@ class MockClient extends _i1.Mock implements _i5.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i7.Future<_i5.Response>.value(_FakeResponse_4(
+        returnValue: _i8.Future<_i6.Response>.value(_FakeResponse_4(
           this,
           Invocation.method(
             #head,
@@ -318,9 +311,9 @@ class MockClient extends _i1.Mock implements _i5.Client {
             {#headers: headers},
           ),
         )),
-      ) as _i7.Future<_i5.Response>);
+      ) as _i8.Future<_i6.Response>);
   @override
-  _i7.Future<_i5.Response> get(
+  _i8.Future<_i6.Response> get(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -330,7 +323,7 @@ class MockClient extends _i1.Mock implements _i5.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i7.Future<_i5.Response>.value(_FakeResponse_4(
+        returnValue: _i8.Future<_i6.Response>.value(_FakeResponse_4(
           this,
           Invocation.method(
             #get,
@@ -338,13 +331,13 @@ class MockClient extends _i1.Mock implements _i5.Client {
             {#headers: headers},
           ),
         )),
-      ) as _i7.Future<_i5.Response>);
+      ) as _i8.Future<_i6.Response>);
   @override
-  _i7.Future<_i5.Response> post(
+  _i8.Future<_i6.Response> post(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i10.Encoding? encoding,
+    _i11.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -356,7 +349,7 @@ class MockClient extends _i1.Mock implements _i5.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i7.Future<_i5.Response>.value(_FakeResponse_4(
+        returnValue: _i8.Future<_i6.Response>.value(_FakeResponse_4(
           this,
           Invocation.method(
             #post,
@@ -368,13 +361,13 @@ class MockClient extends _i1.Mock implements _i5.Client {
             },
           ),
         )),
-      ) as _i7.Future<_i5.Response>);
+      ) as _i8.Future<_i6.Response>);
   @override
-  _i7.Future<_i5.Response> put(
+  _i8.Future<_i6.Response> put(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i10.Encoding? encoding,
+    _i11.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -386,7 +379,7 @@ class MockClient extends _i1.Mock implements _i5.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i7.Future<_i5.Response>.value(_FakeResponse_4(
+        returnValue: _i8.Future<_i6.Response>.value(_FakeResponse_4(
           this,
           Invocation.method(
             #put,
@@ -398,13 +391,13 @@ class MockClient extends _i1.Mock implements _i5.Client {
             },
           ),
         )),
-      ) as _i7.Future<_i5.Response>);
+      ) as _i8.Future<_i6.Response>);
   @override
-  _i7.Future<_i5.Response> patch(
+  _i8.Future<_i6.Response> patch(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i10.Encoding? encoding,
+    _i11.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -416,7 +409,7 @@ class MockClient extends _i1.Mock implements _i5.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i7.Future<_i5.Response>.value(_FakeResponse_4(
+        returnValue: _i8.Future<_i6.Response>.value(_FakeResponse_4(
           this,
           Invocation.method(
             #patch,
@@ -428,13 +421,13 @@ class MockClient extends _i1.Mock implements _i5.Client {
             },
           ),
         )),
-      ) as _i7.Future<_i5.Response>);
+      ) as _i8.Future<_i6.Response>);
   @override
-  _i7.Future<_i5.Response> delete(
+  _i8.Future<_i6.Response> delete(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i10.Encoding? encoding,
+    _i11.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -446,7 +439,7 @@ class MockClient extends _i1.Mock implements _i5.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i7.Future<_i5.Response>.value(_FakeResponse_4(
+        returnValue: _i8.Future<_i6.Response>.value(_FakeResponse_4(
           this,
           Invocation.method(
             #delete,
@@ -458,9 +451,9 @@ class MockClient extends _i1.Mock implements _i5.Client {
             },
           ),
         )),
-      ) as _i7.Future<_i5.Response>);
+      ) as _i8.Future<_i6.Response>);
   @override
-  _i7.Future<String> read(
+  _i8.Future<String> read(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -470,10 +463,10 @@ class MockClient extends _i1.Mock implements _i5.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i7.Future<String>.value(''),
-      ) as _i7.Future<String>);
+        returnValue: _i8.Future<String>.value(''),
+      ) as _i8.Future<String>);
   @override
-  _i7.Future<_i11.Uint8List> readBytes(
+  _i8.Future<_i12.Uint8List> readBytes(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -483,24 +476,24 @@ class MockClient extends _i1.Mock implements _i5.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i7.Future<_i11.Uint8List>.value(_i11.Uint8List(0)),
-      ) as _i7.Future<_i11.Uint8List>);
+        returnValue: _i8.Future<_i12.Uint8List>.value(_i12.Uint8List(0)),
+      ) as _i8.Future<_i12.Uint8List>);
   @override
-  _i7.Future<_i5.StreamedResponse> send(_i5.BaseRequest? request) =>
+  _i8.Future<_i6.StreamedResponse> send(_i6.BaseRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #send,
           [request],
         ),
         returnValue:
-            _i7.Future<_i5.StreamedResponse>.value(_FakeStreamedResponse_5(
+            _i8.Future<_i6.StreamedResponse>.value(_FakeStreamedResponse_5(
           this,
           Invocation.method(
             #send,
             [request],
           ),
         )),
-      ) as _i7.Future<_i5.StreamedResponse>);
+      ) as _i8.Future<_i6.StreamedResponse>);
   @override
   void close() => super.noSuchMethod(
         Invocation.method(

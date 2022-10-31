@@ -1,3 +1,9 @@
+//import 'dart:ui';
+
+import 'dart:convert';
+
+import 'package:flutter/widgets.dart';
+import 'package:http/retry.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'helper_classes.g.dart';
@@ -30,11 +36,20 @@ class Weather {
   int id;
   String main;
   String description;
-  String icon;
+  @JsonKey(fromJson: _iconFromJson, toJson: _iconToJson)
+  Image icon;
 
   factory Weather.fromJson(Map<String, dynamic> json) =>
       _$WeatherFromJson(json);
   Map<String, dynamic> toJson() => _$WeatherToJson(this);
+
+  static _iconFromJson(String icon) =>
+      Image.network('http://openweathermap.org/img/wn/$icon@2x.png',
+          fit: BoxFit.cover, errorBuilder:
+              (BuildContext context, Object exception, StackTrace? stackTrace) {
+        return const Text('no Image');
+      });
+  static _iconToJson(Image icon) => json.encode(icon);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -94,7 +109,12 @@ class ForecastWeatherData {
       _$ForecastWeatherDataFromJson(json);
   Map<String, dynamic> toJson() => _$ForecastWeatherDataToJson(this);
 
-  static DateTime _fromJson(int dt) => DateTime.fromMillisecondsSinceEpoch(dt);
+  static DateTime _fromJson(int dt) {
+    var date = DateTime.fromMillisecondsSinceEpoch(dt * 1000);
+    print(date);
+    return date;
+  }
+
   static int _toJson(DateTime time) => time.millisecondsSinceEpoch;
 }
 
@@ -113,12 +133,12 @@ class ForecastTemperature {
       _$ForecastTemperatureFromJson(json);
   Map<String, dynamic> toJson() => _$ForecastTemperatureToJson(this);
 
-  static _dayFromJson(double day) => Temperature(day);
+  static _dayFromJson(num day) => Temperature(day.toDouble());
   static _dayToJson(Temperature day) => day.kelvin.toDouble();
 
-  static _minFromJson(double min) => Temperature(min);
+  static _minFromJson(num min) => Temperature(min.toDouble());
   static _minToJson(Temperature min) => min.kelvin.toDouble();
 
-  static _maxFromJson(double max) => Temperature(max);
+  static _maxFromJson(num max) => Temperature(max.toDouble());
   static _maxToJson(Temperature max) => max.kelvin.toDouble();
 }
