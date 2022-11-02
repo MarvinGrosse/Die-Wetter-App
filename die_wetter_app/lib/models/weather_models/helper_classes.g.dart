@@ -30,10 +30,10 @@ Map<String, dynamic> _$WeatherToJson(Weather instance) => <String, dynamic>{
     };
 
 MainData _$MainDataFromJson(Map<String, dynamic> json) => MainData(
-      MainData._tempFromJson(json['temp'] as double),
-      MainData._feels_likeFromJson(json['feels_like'] as double),
-      MainData._temp_minFromJson(json['temp_min'] as double),
-      MainData._temp_maxFromJson(json['temp_max'] as double),
+      MainData._tempFromJson(json['temp'] as num),
+      MainData._feels_likeFromJson(json['feels_like'] as num),
+      MainData._temp_minFromJson(json['temp_min'] as num),
+      MainData._temp_maxFromJson(json['temp_max'] as num),
     );
 
 Map<String, dynamic> _$MainDataToJson(MainData instance) => <String, dynamic>{

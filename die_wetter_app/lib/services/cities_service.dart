@@ -1,6 +1,5 @@
 import 'package:die_wetter_app/models/city.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 import 'package:flutter/services.dart';

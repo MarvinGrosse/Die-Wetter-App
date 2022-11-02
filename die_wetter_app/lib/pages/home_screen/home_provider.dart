@@ -4,7 +4,6 @@ import 'package:die_wetter_app/services/database_helper.dart';
 import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-import 'package:weather/weather.dart';
 
 import '../../models/city.dart';
 import '../../models/locations.dart';
@@ -24,9 +23,6 @@ class HomeNotifier extends StateNotifier<AsyncValue<List<WeatherData>>> {
   List<Location> locationNames = [];
   List<WeatherData> weatherList = [];
 
-  final StackTrace noLocationsError =
-      StackTrace.fromString('There are no locations. \nTry adding a location');
-
   void getWeather() async {
     state = const AsyncLoading();
     locationNames = [];
@@ -44,23 +40,24 @@ class HomeNotifier extends StateNotifier<AsyncValue<List<WeatherData>>> {
 
     //checken ob locations leer sind, falls ja state setzten.
     if (locationNames.isEmpty) {
-      state = AsyncError(Error, noLocationsError);
+      state = AsyncError(
+          Error,
+          StackTrace.fromString(
+              'There are no locations. \nTry adding a location'));
     } else {
       // loopen über die Locations der Datenbank und fetchen des Wetters der Api.
       for (var element in locationNames) {
         try {
-          TodayWeather w = await ref
-              .read(weatherServiceProvider)
-              .getTodaysWeather(element.name);
+          TodayWeather w =
+              await ref.read(weatherServiceProvider).getTodaysWeather(element);
 
-          ForecastWeather f = await ref
-              .read(weatherServiceProvider)
-              .getForcastWeather(element.name);
-          //List<HourlyWeather> hf = []; //await getHourForecast(element.name); Funktioniert nicht weil aki key anscheinend nicht valide für diesen call
+          ForecastWeather f =
+              await ref.read(weatherServiceProvider).getForcastWeather(element);
+
           weatherList.add(WeatherData(w, f, element));
         } catch (e, s) {
           state = AsyncError(Error(), StackTrace.fromString(e.toString()));
-          print(e.toString());
+          //print(e.toString());
         }
       }
       state = AsyncData(weatherList);
@@ -73,7 +70,10 @@ class HomeNotifier extends StateNotifier<AsyncValue<List<WeatherData>>> {
       locationNames.remove(weatherData.location);
       weatherList.remove(weatherData);
       if (weatherList.isEmpty) {
-        state = AsyncError(Error, noLocationsError);
+        state = AsyncError(
+            Error,
+            StackTrace.fromString(
+                'There are no locations. \nTry adding a location'));
       } else {
         state = AsyncData(weatherList);
       }
@@ -87,9 +87,13 @@ class HomeNotifier extends StateNotifier<AsyncValue<List<WeatherData>>> {
 
   void addLocation(City city) async {
     try {
-      await ref.read(weatherServiceProvider).getTodaysWeather(city.name!);
-      await ref.read(databaseProvider).insertLocation(
-          Location(id: const Uuid().v4().toString(), name: city.name!));
+      Location location = Location(
+          id: const Uuid().v4().toString(),
+          name: city.name!,
+          lat: city.lat!,
+          lng: city.lng!);
+      await ref.read(weatherServiceProvider).getTodaysWeather(location);
+      await ref.read(databaseProvider).insertLocation(location);
       getWeather();
     } catch (e) {
       state = AsyncError(

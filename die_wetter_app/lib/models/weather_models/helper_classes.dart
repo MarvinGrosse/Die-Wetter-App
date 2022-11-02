@@ -1,9 +1,5 @@
-//import 'dart:ui';
-
 import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
-import 'package:http/retry.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'helper_classes.g.dart';
@@ -19,10 +15,10 @@ class Temperature {
   Map<String, dynamic> toJson() => _$TemperatureToJson(this);
 
   /// Convert temperature to Celsius
-  double? get celsius => kelvin != null ? kelvin - 273.15 : null;
+  double? get celsius => kelvin - 273.15;
 
   /// Convert temperature to Fahrenheit
-  double? get fahrenheit => kelvin != null ? kelvin * (9 / 5) - 459.67 : null;
+  double? get fahrenheit => kelvin * (9 / 5) - 459.67;
 
   @override
   String toString() =>
@@ -69,17 +65,18 @@ class MainData {
       _$MainDataFromJson(json);
   Map<String, dynamic> toJson() => _$MainDataToJson(this);
 
-  static _tempFromJson(double temp) => Temperature(temp);
+  static _tempFromJson(num temp) => Temperature(temp.toDouble());
   static _tempToJson(Temperature temp) => temp.kelvin.toDouble();
 
-  static _feels_likeFromJson(double feels_like) => Temperature(feels_like);
+  static _feels_likeFromJson(num feels_like) =>
+      Temperature(feels_like.toDouble());
   static _feels_likeToJson(Temperature feels_like) =>
       feels_like.kelvin.toDouble();
 
-  static _temp_minFromJson(double temp_min) => Temperature(temp_min);
+  static _temp_minFromJson(num temp_min) => Temperature(temp_min.toDouble());
   static _temp_minToJson(Temperature temp_min) => temp_min.kelvin.toDouble();
 
-  static _temp_maxFromJson(double temp_max) => Temperature(temp_max);
+  static _temp_maxFromJson(num temp_max) => Temperature(temp_max.toDouble());
   static _temp_maxToJson(Temperature temp_max) => temp_max.kelvin.toDouble();
 }
 
@@ -109,11 +106,8 @@ class ForecastWeatherData {
       _$ForecastWeatherDataFromJson(json);
   Map<String, dynamic> toJson() => _$ForecastWeatherDataToJson(this);
 
-  static DateTime _fromJson(int dt) {
-    var date = DateTime.fromMillisecondsSinceEpoch(dt * 1000);
-    print(date);
-    return date;
-  }
+  static DateTime _fromJson(int dt) =>
+      DateTime.fromMillisecondsSinceEpoch(dt * 1000);
 
   static int _toJson(DateTime time) => time.millisecondsSinceEpoch;
 }

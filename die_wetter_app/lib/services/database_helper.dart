@@ -1,4 +1,3 @@
-//import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -35,7 +34,7 @@ class DBHandler {
     return await openDatabase(join(await getDatabasesPath(), 'WetterApp.db'),
         onCreate: ((db, version) {
       db.execute(
-        "CREATE TABLE locations(id TEXT PRIMARY KEY, name TEXT);",
+        "CREATE TABLE locations(id TEXT PRIMARY KEY, name TEXT, lat REAL, lng REAL);",
       );
     }), version: 1);
   }

@@ -4,23 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-class AppBarSearch extends StatefulWidget implements PreferredSizeWidget {
+final appSearchProvider = StateProvider<bool>(((ref) {
+  return false;
+}));
+
+class AppBarSearch extends ConsumerStatefulWidget
+    implements PreferredSizeWidget {
   const AppBarSearch({
     super.key,
   });
 
   @override
-  State<AppBarSearch> createState() => _AppBarSearchState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _AppBarSearchState();
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
 }
 
-class _AppBarSearchState extends State<AppBarSearch> {
+class _AppBarSearchState extends ConsumerState<AppBarSearch> {
   @override
   void initState() {
-    isSearch = false;
     super.initState();
+    isSearch = false;
   }
 
   bool isSearch = false;
@@ -34,25 +39,25 @@ class _AppBarSearchState extends State<AppBarSearch> {
 
   @override
   Widget build(BuildContext context) {
+    isSearch = ref.watch(appSearchProvider);
     return AppBar(
       toolbarHeight: 95,
       title: isSearch
           ? AppBarTextField(
               textController: _searchTextController,
               callback: () {
-                setState(() {
-                  isSearch = false;
-                });
+                ref.read(appSearchProvider.state).state = false;
               },
             )
           : const AppBarTitle(),
       centerTitle: true,
       actions: [
         IconButton(
-          onPressed: () => setState(() {
-            isSearch = !isSearch;
+          onPressed: () {
+            ref.read(appSearchProvider.state).state =
+                !ref.read(appSearchProvider.state).state;
             _searchTextController.clear();
-          }),
+          },
           icon: Icon(isSearch ? Icons.close : Icons.search),
         )
       ],
@@ -104,7 +109,6 @@ class AppBarTextField extends ConsumerWidget {
           decoration: const BoxDecoration(
               border:
                   Border(bottom: BorderSide(width: 0.5, color: Colors.grey))),
-          //height: 56,
           child: ListTile(
             visualDensity: const VisualDensity(vertical: -4),
             dense: true,

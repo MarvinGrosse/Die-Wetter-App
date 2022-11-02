@@ -14,6 +14,7 @@ TodayWeather _$TodayWeatherFromJson(Map<String, dynamic> json) => TodayWeather(
       MainData.fromJson(json['main'] as Map<String, dynamic>),
       Wind.fromJson(json['wind'] as Map<String, dynamic>),
       TodayWeather._fromJson(json['dt'] as int),
+      TodayWeather._countryFromJson(json['sys'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TodayWeatherToJson(TodayWeather instance) =>
@@ -23,4 +24,5 @@ Map<String, dynamic> _$TodayWeatherToJson(TodayWeather instance) =>
       'main': instance.main.toJson(),
       'wind': instance.wind.toJson(),
       'dt': TodayWeather._toJson(instance.dt),
+      'sys': instance.country,
     };

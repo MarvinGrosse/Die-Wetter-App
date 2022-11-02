@@ -252,33 +252,33 @@ class MockWeatherService extends _i1.Mock implements _i10.WeatherService {
   }
 
   @override
-  _i8.Future<_i4.TodayWeather> getTodaysWeather(String? cityName) =>
+  _i8.Future<_i4.TodayWeather> getTodaysWeather(_i9.Location? city) =>
       (super.noSuchMethod(
         Invocation.method(
           #getTodaysWeather,
-          [cityName],
+          [city],
         ),
         returnValue: _i8.Future<_i4.TodayWeather>.value(_FakeTodayWeather_2(
           this,
           Invocation.method(
             #getTodaysWeather,
-            [cityName],
+            [city],
           ),
         )),
       ) as _i8.Future<_i4.TodayWeather>);
   @override
-  _i8.Future<_i5.ForecastWeather> getForcastWeather(String? cityName) =>
+  _i8.Future<_i5.ForecastWeather> getForcastWeather(_i9.Location? city) =>
       (super.noSuchMethod(
         Invocation.method(
           #getForcastWeather,
-          [cityName],
+          [city],
         ),
         returnValue:
             _i8.Future<_i5.ForecastWeather>.value(_FakeForecastWeather_3(
           this,
           Invocation.method(
             #getForcastWeather,
-            [cityName],
+            [city],
           ),
         )),
       ) as _i8.Future<_i5.ForecastWeather>);

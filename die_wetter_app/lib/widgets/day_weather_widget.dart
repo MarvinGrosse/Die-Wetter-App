@@ -1,5 +1,4 @@
 import 'package:die_wetter_app/models/weather_models/today_weather.dart';
-import 'package:die_wetter_app/services/weather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -40,8 +39,6 @@ class DayWeatherWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final weatherController = ref.read(weatherProvider.notifier);
-
     return Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
@@ -67,9 +64,7 @@ class DayWeatherWidget extends ConsumerWidget {
                   '${data.main.temp}',
                   style: const TextStyle(fontSize: 50),
                 ),
-                SizedBox(width: 80, child: data.weather![0].icon
-                    //weatherController.getWeatherIcon(data.weather![0].icon),
-                    ),
+                SizedBox(width: 80, child: data.weather![0].icon),
               ],
             ),
             Container(
@@ -89,10 +84,10 @@ class DayWeatherWidget extends ConsumerWidget {
                     children: [
                       Text(data.weather?.first.description ?? '-'),
                       Text(
-                        'Max: ${data.main.temp_max}', //data.main?.tempMax?.celsius?.toStringAsFixed(0)
+                        'Max: ${data.main.temp_max}',
                       ),
                       Text(
-                        'Min: ${data.main.temp_min}', //data.main?.tempMin?.celsius?.toStringAsFixed(0)
+                        'Min: ${data.main.temp_min}',
                       )
                     ],
                   )
